@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -22,7 +22,7 @@
             padding: 0;
         }
 
-        /* МЕГА КРУТОЙ АНИМИРОВАННЫЙ АБСТРАКТНЫЙ ФОН */
+        /* АНИМИРОВАННЫЙ АБСТРАКТНЫЙ ФОН */
         .abstract-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -69,10 +69,8 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
-        /* Плавное появление страниц */
-        #app {
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
+        /* Анимация SPA */
+        #app { transition: opacity 0.4s ease, transform 0.4s ease; }
         .page-enter { opacity: 0; transform: translateY(20px); filter: blur(10px); }
         .page-enter-active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
@@ -90,7 +88,29 @@
             clip-path: circle(150% at calc(100% - 2.5rem) 2.5rem);
         }
 
-        .media-container video, .media-container img {
+        /* Стили модального окна проекта */
+        #project-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #project-modal.hidden-modal {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #project-modal.active-modal {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        #modal-content {
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: scale(0.95) translateY(20px);
+        }
+        #project-modal.active-modal #modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .media-container img {
             width: 100%; height: 100%; object-fit: cover;
         }
     </style>
@@ -104,17 +124,17 @@
         <div class="orb orb-4"></div>
     </div>
 
-    <header class="fixed top-4 left-4 right-4 z-50 glass rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
-        <a href="#home" class="text-xl font-bold tracking-widest text-white uppercase flex items-center gap-3">
+    <header class="fixed top-4 left-4 right-4 z-40 glass rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
+        <a href="#home" class="text-lg md:text-xl font-bold tracking-widest text-white uppercase flex items-center gap-3">
             <span class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-400 via-indigo-500 to-purple-600 flex items-center justify-center text-sm shadow-lg shadow-indigo-500/50">ED</span>
-            Evgeny_Debug
+            <span class="hidden sm:inline">Evgeny_Debug</span>
         </a>
         
         <div class="flex items-center gap-4">
             <div class="hidden sm:flex bg-black/40 rounded-xl p-1.5 border border-white/10 text-xs font-bold tracking-wide">
-                <button class="px-3 py-1.5 rounded-lg lang-btn transition-colors hover:text-white text-gray-400" onclick="setLang('uk')">UK</button>
-                <button class="px-3 py-1.5 rounded-lg lang-btn active bg-white/20 text-white shadow-sm" onclick="setLang('ru')">RU</button>
-                <button class="px-3 py-1.5 rounded-lg lang-btn transition-colors hover:text-white text-gray-400" onclick="setLang('en')">EN</button>
+                <button class="px-3 py-1.5 rounded-lg lang-btn active bg-white/20 text-white shadow-sm transition-colors" onclick="setLang('uk')">UK</button>
+                <button class="px-3 py-1.5 rounded-lg lang-btn text-gray-400 transition-colors" onclick="setLang('ru')">RU</button>
+                <button class="px-3 py-1.5 rounded-lg lang-btn text-gray-400 transition-colors" onclick="setLang('en')">EN</button>
             </div>
             
             <button id="burger-btn" class="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex flex-col justify-center items-center gap-1.5 z-50 hover:bg-white/20 transition-colors focus:outline-none">
@@ -124,312 +144,148 @@
         </div>
     </header>
 
-    <div id="burger-menu" class="fixed inset-0 z-40 glass bg-black/80 flex flex-col items-center justify-center backdrop-blur-3xl">
+    <div id="burger-menu" class="fixed inset-0 z-30 glass bg-black/80 flex flex-col items-center justify-center backdrop-blur-3xl">
         <nav class="flex flex-col items-center gap-6 text-3xl md:text-5xl font-bold tracking-tight">
-            <a href="#home" class="menu-link hover:text-cyan-400 hover:scale-110 transition-all" data-i18n="nav_home">Главная</a>
-            <a href="#about" class="menu-link hover:text-purple-400 hover:scale-110 transition-all" data-i18n="nav_about">О разработчике</a>
-            <a href="#process" class="menu-link hover:text-indigo-400 hover:scale-110 transition-all" data-i18n="nav_process">Как мы работаем</a>
-            <a href="#portfolio" class="menu-link hover:text-pink-400 hover:scale-110 transition-all" data-i18n="nav_portfolio">Портфолио</a>
-            <a href="#reviews" class="menu-link hover:text-yellow-400 hover:scale-110 transition-all" data-i18n="nav_reviews">Отзывы</a>
-            <a href="#contact" class="menu-link hover:text-emerald-400 hover:scale-110 transition-all" data-i18n="nav_contact">Контакты</a>
+            <a href="#home" class="menu-link hover:text-cyan-400 hover:scale-110 transition-all" data-i18n="nav_home">Головна</a>
+            <a href="#about" class="menu-link hover:text-purple-400 hover:scale-110 transition-all" data-i18n="nav_about">Про розробника</a>
+            <a href="#process" class="menu-link hover:text-indigo-400 hover:scale-110 transition-all" data-i18n="nav_process">Як ми працюємо</a>
+            <a href="#portfolio" class="menu-link hover:text-pink-400 hover:scale-110 transition-all" data-i18n="nav_portfolio">Портфоліо</a>
+            <a href="#contact" class="menu-link hover:text-emerald-400 hover:scale-110 transition-all" data-i18n="nav_contact">Контакти</a>
         </nav>
         
         <div class="mt-12 sm:hidden flex bg-black/40 rounded-xl p-1.5 border border-white/10 text-sm font-bold">
-            <button class="px-4 py-2 rounded-lg lang-btn transition-colors" onclick="setLang('uk')">UK</button>
-            <button class="px-4 py-2 rounded-lg lang-btn active bg-white/20" onclick="setLang('ru')">RU</button>
-            <button class="px-4 py-2 rounded-lg lang-btn transition-colors" onclick="setLang('en')">EN</button>
+            <button class="px-4 py-2 rounded-lg lang-btn active bg-white/20 text-white transition-colors" onclick="setLang('uk')">UK</button>
+            <button class="px-4 py-2 rounded-lg lang-btn text-gray-400 transition-colors" onclick="setLang('ru')">RU</button>
+            <button class="px-4 py-2 rounded-lg lang-btn text-gray-400 transition-colors" onclick="setLang('en')">EN</button>
         </div>
     </div>
 
-    <main id="app" class="max-w-7xl mx-auto px-4 min-h-[70vh] flex flex-col justify-center">
-        </main>
+    <div id="project-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden-modal">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md" onclick="closeProject()"></div>
+        <div id="modal-content" class="relative glass w-full max-w-5xl max-h-[90vh] m-4 rounded-[2rem] overflow-hidden flex flex-col pointer-events-auto border border-white/20 shadow-2xl">
+            <button onclick="closeProject()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-red-500/80 text-white rounded-full flex items-center justify-center transition-colors border border-white/20">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            
+            <div class="overflow-y-auto w-full h-full custom-scrollbar pb-8">
+                <div id="modal-gallery" class="grid grid-cols-1 md:grid-cols-2 gap-4 p-6"></div>
+                
+                <div class="px-8 pb-8">
+                    <h2 id="modal-title" class="text-3xl md:text-4xl font-bold mb-4 text-white"></h2>
+                    <div id="modal-tags" class="flex flex-wrap gap-2 mb-6"></div>
+                    <div id="modal-desc" class="text-gray-300 text-lg leading-relaxed space-y-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <footer class="fixed bottom-4 left-4 right-4 z-50 glass rounded-2xl px-6 py-4 flex justify-around items-center sm:hidden">
-        <a href="#home" class="text-gray-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-        </a>
-        <a href="#portfolio" class="text-gray-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        </a>
-        <a href="#reviews" class="text-gray-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path></svg>
-        </a>
-        <a href="#contact" class="text-gray-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-        </a>
+    <main id="app" class="max-w-7xl mx-auto px-4 min-h-[70vh] flex flex-col justify-center"></main>
+
+    <footer class="fixed bottom-4 left-4 right-4 z-30 glass rounded-2xl px-6 py-4 flex justify-around items-center sm:hidden">
+        <a href="#home" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg></a>
+        <a href="#portfolio" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg></a>
+        <a href="#contact" class="text-gray-400 hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg></a>
     </footer>
 
     <template id="tpl-home">
-        <div class="flex flex-col lg:flex-row items-center justify-between gap-12 w-full">
-            <div class="flex-1 text-center lg:text-left z-10">
-                <div class="inline-block px-4 py-2 rounded-full glass border border-white/20 text-sm font-bold text-cyan-400 mb-6 uppercase tracking-widest animate-pulse">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12 w-full mt-8 md:mt-0">
+            <div class="flex-1 text-center lg:text-left z-10 w-full">
+                <div class="inline-block px-4 py-2 rounded-full glass border border-white/20 text-xs md:text-sm font-bold text-cyan-400 mb-6 uppercase tracking-widest animate-pulse">
                     Available for Work
                 </div>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight leading-tight drop-shadow-2xl">
-                    <span data-i18n="hero_hi">Привет, я</span><br>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500" data-i18n="hero_name">Евгений</span>
+                <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight leading-tight drop-shadow-2xl">
+                    <span data-i18n="hero_hi">Привіт, я</span><br>
+                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-500" data-i18n="hero_name">Євгеній</span>
                 </h1>
-                <p class="text-xl md:text-2xl text-gray-300 mb-10 font-light max-w-2xl mx-auto lg:mx-0" data-i18n="hero_desc">
-                    Архитектор цифровых решений. Разрабатываю премиальные сайты-визитки, сложные Telegram-боты и масштабируемые веб-приложения.
+                <p class="text-lg md:text-2xl text-gray-300 mb-10 font-light max-w-2xl mx-auto lg:mx-0" data-i18n="hero_desc">
+                    Архітектор цифрових рішень. Розробляю преміальні сайти, складні Telegram-боти та масштабовані веб-додатки.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                    <a href="#portfolio" class="px-8 py-4 bg-white text-black font-bold rounded-2xl hover:scale-105 transition-all text-center shadow-[0_0_40px_rgba(255,255,255,0.3)]" data-i18n="btn_projects">Смотреть работы</a>
-                    <a href="#contact" class="px-8 py-4 glass border border-white/20 font-bold text-white rounded-2xl hover:bg-white/10 hover:scale-105 transition-all text-center" data-i18n="btn_hire">Заказать разработку</a>
+                    <a href="#portfolio" class="px-6 py-4 bg-white text-black font-bold rounded-2xl hover:scale-105 transition-all text-center shadow-[0_0_40px_rgba(255,255,255,0.3)]" data-i18n="btn_projects">Дивитися роботи</a>
+                    <a href="#contact" class="px-6 py-4 glass border border-white/20 font-bold text-white rounded-2xl hover:bg-white/10 hover:scale-105 transition-all text-center" data-i18n="btn_hire">Замовити розробку</a>
                 </div>
             </div>
             
-            <div class="flex-1 w-full relative z-10 media-container rounded-[2.5rem] overflow-hidden glass aspect-square lg:aspect-auto lg:h-[650px] border border-white/10 shadow-[0_0_60px_rgba(79,70,229,0.3)] group">
-                <video autoplay loop muted playsinline class="group-hover:scale-105 transition-transform duration-1000">
-                    <source src="https://cdn.coverr.co/videos/coverr-server-room-2531/1080p.mp4" type="video/mp4">
-                </video>
-                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-900/40 to-purple-900/20 mix-blend-overlay"></div>
-            </div>
-        </div>
-    </template>
-
-    <template id="tpl-about">
-        <div class="w-full">
-            <h2 class="text-4xl md:text-7xl font-bold mb-16 text-center drop-shadow-lg" data-i18n="nav_about">О разработчике</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center glass p-8 md:p-16 rounded-[3rem] relative overflow-hidden border border-white/10">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/20 rounded-full filter blur-[120px]"></div>
-                
-                <div class="media-container rounded-[2rem] overflow-hidden aspect-[4/5] border border-white/20 relative shadow-2xl">
-                    <img src="https://images.unsplash.com/photo-1549692520-acc6669e2f0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Evgeny Developer" class="hover:scale-110 transition-transform duration-700">
-                </div>
-                
-                <div class="space-y-8 text-gray-200 text-lg md:text-xl leading-relaxed z-10 font-light">
-                    <p data-i18n="about_p1">Я — Евгений, профессиональный Full-Stack разработчик. Моя миссия — трансформировать ваши идеи в элегантный код и работающий бизнес-инструмент.</p>
-                    <p data-i18n="about_p2">Специализируюсь на создании адаптивных сайтов с эффектами Glassmorphism, высоконагруженных Telegram-ботах и проектировании надежных серверных архитектур.</p>
-                    
-                    <div class="grid grid-cols-2 gap-6 pt-8 mt-8 border-t border-white/10">
-                        <div class="glass p-6 rounded-2xl border border-white/5 text-center">
-                            <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 text-4xl md:text-5xl mb-2">5+</h4>
-                            <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="stat_exp">Лет опыта</p>
-                        </div>
-                        <div class="glass p-6 rounded-2xl border border-white/5 text-center">
-                            <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 text-4xl md:text-5xl mb-2">120+</h4>
-                            <p class="text-sm font-semibold text-gray-400 uppercase tracking-wider" data-i18n="stat_proj">Проектов</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="tpl-process">
-        <div class="w-full">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl md:text-7xl font-bold drop-shadow-lg mb-4" data-i18n="nav_process">Процесс работы</h2>
-                <p class="text-gray-400 text-lg md:text-xl" data-i18n="proc_sub">Прозрачность и качество на каждом этапе</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 z-10 relative">
-                <div class="glass p-8 rounded-[2rem] text-center hover:-translate-y-4 transition-all duration-300 border border-white/5 hover:border-blue-500/50">
-                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-400 to-indigo-600 rounded-3xl flex items-center justify-center text-3xl font-bold mb-6 shadow-[0_0_30px_rgba(59,130,246,0.5)]">1</div>
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="proc_1_title">Аналитика</h3>
-                    <p class="text-sm text-gray-400" data-i18n="proc_1_desc">Изучаем задачу, составляем детальное ТЗ и фиксируем сроки.</p>
-                </div>
-                <div class="glass p-8 rounded-[2rem] text-center hover:-translate-y-4 transition-all duration-300 border border-white/5 hover:border-purple-500/50">
-                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-indigo-400 to-purple-600 rounded-3xl flex items-center justify-center text-3xl font-bold mb-6 shadow-[0_0_30px_rgba(168,85,247,0.5)]">2</div>
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="proc_2_title">Дизайн</h3>
-                    <p class="text-sm text-gray-400" data-i18n="proc_2_desc">Проектируем логику и рисуем современный UI/UX интерфейс.</p>
-                </div>
-                <div class="glass p-8 rounded-[2rem] text-center hover:-translate-y-4 transition-all duration-300 border border-white/5 hover:border-pink-500/50">
-                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-purple-400 to-pink-600 rounded-3xl flex items-center justify-center text-3xl font-bold mb-6 shadow-[0_0_30px_rgba(236,72,153,0.5)]">3</div>
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="proc_3_title">Разработка</h3>
-                    <p class="text-sm text-gray-400" data-i18n="proc_3_desc">Пишем чистый код, настраиваем базы данных и API.</p>
-                </div>
-                <div class="glass p-8 rounded-[2rem] text-center hover:-translate-y-4 transition-all duration-300 border border-white/5 hover:border-rose-500/50">
-                    <div class="w-20 h-20 mx-auto bg-gradient-to-br from-pink-400 to-rose-600 rounded-3xl flex items-center justify-center text-3xl font-bold mb-6 shadow-[0_0_30px_rgba(244,63,94,0.5)]">4</div>
-                    <h3 class="text-xl font-bold text-white mb-3" data-i18n="proc_4_title">Запуск</h3>
-                    <p class="text-sm text-gray-400" data-i18n="proc_4_desc">Тестируем под нагрузкой, деплоим на сервер и сдаем проект.</p>
-                </div>
-            </div>
-            
-            <div class="mt-12 w-full h-48 md:h-80 glass rounded-[2rem] overflow-hidden border border-white/10 relative shadow-2xl">
-                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Process" class="w-full h-full object-cover opacity-40 mix-blend-luminosity">
-                <div class="absolute inset-0 flex items-center justify-center pointer-events-none bg-gradient-to-t from-black/80 to-transparent">
-                    <h3 class="text-4xl md:text-6xl font-bold tracking-widest uppercase text-white/50 backdrop-blur-sm px-8 py-4 rounded-3xl border border-white/10">Code & Create</h3>
-                </div>
+            <div class="flex-1 w-full relative z-10 media-container rounded-[2rem] md:rounded-[2.5rem] overflow-hidden glass aspect-square lg:aspect-auto lg:h-[650px] border border-white/10 shadow-[0_0_60px_rgba(79,70,229,0.3)] group">
+                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Cyber Concept" class="group-hover:scale-105 transition-transform duration-1000 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-tr from-indigo-900/60 to-purple-900/40 mix-blend-overlay"></div>
             </div>
         </div>
     </template>
 
     <template id="tpl-portfolio">
         <div class="w-full">
-            <h2 class="text-4xl md:text-7xl font-bold mb-16 text-center drop-shadow-lg" data-i18n="nav_portfolio">Портфолио</h2>
+            <h2 class="text-4xl md:text-7xl font-bold mb-12 text-center drop-shadow-lg" data-i18n="nav_portfolio">Портфоліо</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-indigo-500/50 transition-all duration-500 hover:-translate-y-2">
+                <div onclick="openProject(1)" class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-indigo-500/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer relative">
                     <div class="h-60 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="TG Bot">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
                     </div>
                     <div class="p-8 -mt-16 relative z-10">
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 backdrop-blur-md border border-indigo-500/20">Telegram</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-blue-500/20 text-blue-300 backdrop-blur-md border border-blue-500/20">Python</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300">Telegram</span>
                         </div>
                         <h3 class="text-2xl font-bold mb-3 text-white">E-commerce TG Bot</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_1_desc">Полноценный магазин внутри Telegram. Корзина, онлайн-оплата, автоматическая генерация чеков и админка.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_1_desc">Повноцінний магазин у Telegram. Кошик, онлайн-оплата та адмінка.</p>
+                        <span class="inline-block mt-4 text-indigo-400 text-sm font-bold group-hover:translate-x-2 transition-transform" data-i18n="btn_more">Детальніше →</span>
                     </div>
                 </div>
 
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2">
+                <div onclick="openProject(2)" class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-cyan-500/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer relative">
                     <div class="h-60 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Dashboard">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
                     </div>
                     <div class="p-8 -mt-16 relative z-10">
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-cyan-500/20 text-cyan-300 backdrop-blur-md border border-cyan-500/20">Web App</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-teal-500/20 text-teal-300 backdrop-blur-md border border-teal-500/20">Vue.js</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-cyan-500/20 text-cyan-300">Web App</span>
                         </div>
                         <h3 class="text-2xl font-bold mb-3 text-white">Crypto Analytics</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_2_desc">Аналитическая панель с графиками реального времени, интеграцией WebSockets и красивым Glass-дизайном.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_2_desc">Аналітична панель із графіками реального часу.</p>
+                        <span class="inline-block mt-4 text-cyan-400 text-sm font-bold group-hover:translate-x-2 transition-transform" data-i18n="btn_more">Детальніше →</span>
                     </div>
                 </div>
-
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2">
+                
+                <div onclick="openProject(3)" class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-purple-500/50 transition-all duration-500 hover:-translate-y-2 cursor-pointer relative">
                     <div class="h-60 overflow-hidden relative">
                         <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Design">
                         <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
                     </div>
                     <div class="p-8 -mt-16 relative z-10">
                         <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-purple-500/20 text-purple-300 backdrop-blur-md border border-purple-500/20">Landing</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-pink-500/20 text-pink-300 backdrop-blur-md border border-pink-500/20">Tailwind CSS</span>
+                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-purple-500/20 text-purple-300">Landing Page</span>
                         </div>
                         <h3 class="text-2xl font-bold mb-3 text-white">Premium Studio</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_3_desc">Сайт-визитка для дизайн-студии с невероятно плавными анимациями и эффектом параллакса.</p>
+                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_3_desc">Сайт-візитка для дизайн-студії з Glassmorphism.</p>
+                        <span class="inline-block mt-4 text-purple-400 text-sm font-bold group-hover:translate-x-2 transition-transform" data-i18n="btn_more">Детальніше →</span>
                     </div>
                 </div>
 
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-emerald-500/50 transition-all duration-500 hover:-translate-y-2">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="CRM">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
-                    </div>
-                    <div class="p-8 -mt-16 relative z-10">
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-emerald-500/20 text-emerald-300 backdrop-blur-md border border-emerald-500/20">CRM</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-green-500/20 text-green-300 backdrop-blur-md border border-green-500/20">Node.js</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-white">Business Flow</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_4_desc">Многопользовательская CRM-система для управления задачами и финансами компании. Сложный бэкенд.</p>
-                    </div>
-                </div>
-
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-yellow-500/50 transition-all duration-500 hover:-translate-y-2">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="PWA">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
-                    </div>
-                    <div class="p-8 -mt-16 relative z-10">
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-yellow-500/20 text-yellow-300 backdrop-blur-md border border-yellow-500/20">PWA</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-orange-500/20 text-orange-300 backdrop-blur-md border border-orange-500/20">React</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-white">Food Express PWA</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_5_desc">Мобильное веб-приложение для заказа еды. Работает офлайн, отправляет Push-уведомления.</p>
-                    </div>
-                </div>
-
-                <div class="glass rounded-[2rem] overflow-hidden group border border-white/5 hover:border-rose-500/50 transition-all duration-500 hover:-translate-y-2">
-                    <div class="h-60 overflow-hidden relative">
-                        <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="AI">
-                        <div class="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-90"></div>
-                    </div>
-                    <div class="p-8 -mt-16 relative z-10">
-                        <div class="flex flex-wrap gap-2 mb-4">
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-rose-500/20 text-rose-300 backdrop-blur-md border border-rose-500/20">AI Bot</span>
-                            <span class="px-3 py-1 text-xs font-bold rounded-lg bg-red-500/20 text-red-300 backdrop-blur-md border border-red-500/20">OpenAI API</span>
-                        </div>
-                        <h3 class="text-2xl font-bold mb-3 text-white">Smart Support AI</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed" data-i18n="port_6_desc">Интеллектуальный бот-помощник на базе ChatGPT, обученный на базе знаний конкретной компании.</p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </template>
-
-    <template id="tpl-reviews">
-        <div class="w-full">
-            <h2 class="text-4xl md:text-7xl font-bold mb-16 text-center drop-shadow-lg" data-i18n="nav_reviews">Отзывы клиентов</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="glass p-8 rounded-[2rem] border border-white/5 relative">
-                    <div class="text-5xl text-indigo-500/30 absolute top-6 right-6 font-serif">"</div>
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Client 1" class="w-14 h-14 rounded-full object-cover border-2 border-indigo-500">
-                        <div>
-                            <h4 class="font-bold text-white text-lg">Максим В.</h4>
-                            <p class="text-xs text-indigo-400 font-semibold" data-i18n="rev_1_role">CEO E-commerce</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 text-sm leading-relaxed relative z-10 italic" data-i18n="rev_1_text">
-                        "Евгений — настоящий профи. Написал для нас Telegram-бота магазина за неделю. Всё работает как швейцарские часы, админка супер удобная. Рекомендую!"
-                    </p>
-                </div>
-
-                <div class="glass p-8 rounded-[2rem] border border-white/5 relative">
-                    <div class="text-5xl text-purple-500/30 absolute top-6 right-6 font-serif">"</div>
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Client 2" class="w-14 h-14 rounded-full object-cover border-2 border-purple-500">
-                        <div>
-                            <h4 class="font-bold text-white text-lg">Анна С.</h4>
-                            <p class="text-xs text-purple-400 font-semibold" data-i18n="rev_2_role">Арт-директор</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 text-sm leading-relaxed relative z-10 italic" data-i18n="rev_2_text">
-                        "Заказывали сайт-визитку. Хотели что-то нестандартное, с вау-эффектом. Результат превзошел ожидания, анимации космос, клиенты в восторге."
-                    </p>
-                </div>
-
-                <div class="glass p-8 rounded-[2rem] border border-white/5 relative">
-                    <div class="text-5xl text-cyan-500/30 absolute top-6 right-6 font-serif">"</div>
-                    <div class="flex items-center gap-4 mb-6 relative z-10">
-                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Client 3" class="w-14 h-14 rounded-full object-cover border-2 border-cyan-500">
-                        <div>
-                            <h4 class="font-bold text-white text-lg">Дмитрий К.</h4>
-                            <p class="text-xs text-cyan-400 font-semibold" data-i18n="rev_3_role">Founder Crypto Startup</p>
-                        </div>
-                    </div>
-                    <p class="text-gray-300 text-sm leading-relaxed relative z-10 italic" data-i18n="rev_3_text">
-                        "Нужен был сложный дашборд для парсинга данных. Евгений не только сделал отличный Frontend на Vue, но и грамотно выстроил архитектуру бэкенда."
-                    </p>
-                </div>
             </div>
         </div>
     </template>
 
     <template id="tpl-contact">
-        <div class="w-full max-w-4xl mx-auto text-center">
-            <h2 class="text-4xl md:text-7xl font-bold mb-6 drop-shadow-lg" data-i18n="nav_contact">Контакты</h2>
-            <p class="text-xl text-gray-300 mb-16 font-light" data-i18n="contact_desc">Готовы превратить идею в мощный цифровой продукт? Напишите мне прямо сейчас.</p>
-            
-            <div class="glass p-10 md:p-20 rounded-[3rem] border border-white/10 relative overflow-hidden shadow-2xl">
-                <div class="absolute -top-32 -left-32 w-80 h-80 bg-indigo-500/30 rounded-full filter blur-[100px]"></div>
-                <div class="absolute -bottom-32 -right-32 w-80 h-80 bg-purple-500/30 rounded-full filter blur-[100px]"></div>
-                
-                <a href="https://t.me/Evgeny_Debug" target="_blank" class="inline-flex flex-col items-center justify-center p-10 bg-white/5 border border-white/10 hover:bg-indigo-600/30 hover:border-indigo-400 transition-all duration-500 rounded-[2.5rem] group z-10 relative w-full sm:w-auto backdrop-blur-md">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-full flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500 shadow-[0_0_40px_rgba(99,102,241,0.6)]">
-                        <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        <div class="w-full max-w-4xl mx-auto text-center mt-8 md:mt-0">
+            <h2 class="text-4xl md:text-7xl font-bold mb-6 drop-shadow-lg" data-i18n="nav_contact">Контакти</h2>
+            <p class="text-lg md:text-xl text-gray-300 mb-12 font-light" data-i18n="contact_desc">Готові перетворити ідею на потужний продукт?</p>
+            <div class="glass p-8 md:p-16 rounded-[2rem] md:rounded-[3rem] border border-white/10 relative overflow-hidden shadow-2xl">
+                <a href="https://t.me/Evgeny_Debug" target="_blank" class="inline-flex flex-col items-center justify-center p-8 bg-white/5 border border-white/10 hover:bg-indigo-600/30 hover:border-indigo-400 transition-all duration-500 rounded-[2rem] group z-10 relative w-full sm:w-auto backdrop-blur-md">
+                    <div class="w-20 h-20 bg-gradient-to-tr from-indigo-500 to-blue-500 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all shadow-[0_0_40px_rgba(99,102,241,0.6)]">
+                        <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
                     </div>
-                    <h3 class="text-4xl font-bold text-white mb-3">@Evgeny_Debug</h3>
-                    <p class="text-indigo-200 font-semibold tracking-widest uppercase text-sm" data-i18n="contact_tg">Telegram Channel / PM</p>
+                    <h3 class="text-2xl md:text-4xl font-bold text-white mb-2">@Evgeny_Debug</h3>
                 </a>
             </div>
         </div>
     </template>
 
     <script>
-        // 1. НАВИГАЦИЯ И РОУТИНГ (SPA)
         const appContainer = document.getElementById('app');
         const burgerBtn = document.getElementById('burger-btn');
         const burgerMenu = document.getElementById('burger-menu');
-        const menuLinks = document.querySelectorAll('.menu-link');
 
         function toggleMenu() {
             const isOpen = burgerMenu.classList.contains('open');
@@ -445,24 +301,19 @@
         }
 
         burgerBtn.addEventListener('click', toggleMenu);
-        menuLinks.forEach(link => link.addEventListener('click', toggleMenu));
+        document.querySelectorAll('.menu-link').forEach(link => link.addEventListener('click', toggleMenu));
 
         function renderPage() {
             let hash = window.location.hash.substring(1) || 'home';
-            const template = document.getElementById(`tpl-${hash}`);
+            if(!['home', 'portfolio', 'contact'].includes(hash)) hash = 'home';
             
-            if (!template) {
-                window.location.hash = 'home';
-                return;
-            }
-
+            const template = document.getElementById(`tpl-${hash}`);
             appContainer.classList.remove('page-enter-active');
             appContainer.classList.add('page-enter');
 
             setTimeout(() => {
                 appContainer.innerHTML = template.innerHTML;
                 applyTranslations(currentLang);
-                
                 requestAnimationFrame(() => {
                     appContainer.classList.remove('page-enter');
                     appContainer.classList.add('page-enter-active');
@@ -474,94 +325,122 @@
         window.addEventListener('hashchange', renderPage);
         window.addEventListener('load', renderPage);
 
-        // 2. МУЛЬТИЯЗЫЧНОСТЬ
-        const translations = {
-            ru: {
-                nav_home: "Главная", nav_about: "О разработчике", nav_process: "Процесс", nav_portfolio: "Портфолио", nav_reviews: "Отзывы", nav_contact: "Контакты",
-                hero_hi: "Привет, я", hero_name: "Евгений", hero_desc: "Архитектор цифровых решений. Разрабатываю премиальные сайты-визитки, сложные Telegram-боты и масштабируемые веб-приложения.",
-                btn_projects: "Смотреть работы", btn_hire: "Заказать разработку",
-                about_p1: "Я — Евгений, профессиональный Full-Stack разработчик. Моя миссия — трансформировать ваши идеи в элегантный код и работающий бизнес-инструмент.",
-                about_p2: "Специализируюсь на создании адаптивных сайтов с эффектами Glassmorphism, высоконагруженных Telegram-ботах и проектировании надежных серверных архитектур.",
-                stat_exp: "Лет опыта", stat_proj: "Проектов",
-                proc_sub: "Прозрачность и качество на каждом этапе",
-                proc_1_title: "Аналитика", proc_1_desc: "Изучаем задачу, составляем детальное ТЗ и фиксируем сроки.",
-                proc_2_title: "Дизайн", proc_2_desc: "Проектируем логику и рисуем современный UI/UX интерфейс.",
-                proc_3_title: "Разработка", proc_3_desc: "Пишем чистый код, настраиваем базы данных и API.",
-                proc_4_title: "Запуск", proc_4_desc: "Тестируем под нагрузкой, деплоим на сервер и сдаем проект.",
-                port_1_desc: "Полноценный магазин внутри Telegram. Корзина, онлайн-оплата, автоматическая генерация чеков и админка.",
-                port_2_desc: "Аналитическая панель с графиками реального времени, интеграцией WebSockets и красивым Glass-дизайном.",
-                port_3_desc: "Сайт-визитка для дизайн-студии с невероятно плавными анимациями и эффектом параллакса.",
-                port_4_desc: "Многопользовательская CRM-система для управления задачами и финансами компании. Сложный бэкенд.",
-                port_5_desc: "Мобильное веб-приложение для заказа еды. Работает офлайн, отправляет Push-уведомления.",
-                port_6_desc: "Интеллектуальный бот-помощник на базе ChatGPT, обученный на базе знаний конкретной компании.",
-                rev_1_role: "CEO E-commerce", rev_1_text: '"Евгений — настоящий профи. Написал для нас Telegram-бота магазина за неделю. Всё работает как швейцарские часы, админка супер удобная. Рекомендую!"',
-                rev_2_role: "Арт-директор", rev_2_text: '"Заказывали сайт-визитку. Хотели что-то нестандартное, с вау-эффектом. Результат превзошел ожидания, анимации космос, клиенты в восторге."',
-                rev_3_role: "Founder Crypto Startup", rev_3_text: '"Нужен был сложный дашборд для парсинга данных. Евгений не только сделал отличный Frontend на Vue, но и грамотно выстроил архитектуру бэкенда."',
-                contact_desc: "Готовы превратить идею в мощный цифровой продукт? Напишите мне прямо сейчас.", contact_tg: "Telegram Channel / PM"
+        // --- ДАННЫЕ ДЛЯ МОДАЛЬНЫХ ОКОН ПРОЕКТОВ ---
+        const projectsData = {
+            1: {
+                images: [
+                    "https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                tags: ["Python", "Aiogram 3", "PostgreSQL", "Stripe API"],
+                ru: { title: "E-commerce TG Bot", desc: "<p>Мощный интернет-магазин, работающий прямо внутри мессенджера Telegram. Разработан для автоматизации продаж и снижения нагрузки на менеджеров.</p><br><p><strong>Функционал:</strong><br>- Полноценная корзина и каталог товаров.<br>- Интеграция с платежными системами (Stripe, CryptoPay).<br>- Удобная админ-панель для владельца бизнеса.<br>- Автоматическая рассылка по базе клиентов.</p>" },
+                uk: { title: "E-commerce TG Bot", desc: "<p>Потужний інтернет-магазин, що працює прямо всередині месенджера Telegram. Розроблений для автоматизації продажів.</p><br><p><strong>Функціонал:</strong><br>- Повноцінний кошик та каталог.<br>- Інтеграція з платіжними системами.<br>- Зручна адмін-панель.<br>- Автоматична розсилка.</p>" },
+                en: { title: "E-commerce TG Bot", desc: "<p>A powerful online store operating right inside the Telegram messenger. Designed to automate sales.</p><br><p><strong>Features:</strong><br>- Full cart and product catalog.<br>- Payment gateways integration.<br>- Convenient admin panel.<br>- Automated mass mailing.</p>" }
             },
-            uk: {
-                nav_home: "Головна", nav_about: "Про розробника", nav_process: "Процес", nav_portfolio: "Портфоліо", nav_reviews: "Відгуки", nav_contact: "Контакти",
-                hero_hi: "Привіт, я", hero_name: "Євгеній", hero_desc: "Архітектор цифрових рішень. Розробляю преміальні сайти-візитки, складні Telegram-боти та масштабовані веб-додатки.",
-                btn_projects: "Дивитися роботи", btn_hire: "Замовити розробку",
-                about_p1: "Я — Євгеній, професійний Full-Stack розробник. Моя місія — трансформувати ваші ідеї в елегантний код та працюючий бізнес-інструмент.",
-                about_p2: "Спеціалізуюся на створенні адаптивних сайтів з ефектами Glassmorphism, високонавантажених Telegram-ботах та проєктуванні надійних серверних архітектур.",
-                stat_exp: "Років досвіду", stat_proj: "Проєктів",
-                proc_sub: "Прозорість та якість на кожному етапі",
-                proc_1_title: "Аналітика", proc_1_desc: "Вивчаємо завдання, складаємо детальне ТЗ та фіксуємо терміни.",
-                proc_2_title: "Дизайн", proc_2_desc: "Проєктуємо логіку та малюємо сучасний UI/UX інтерфейс.",
-                proc_3_title: "Розробка", proc_3_desc: "Пишемо чистий код, налаштовуємо бази даних та API.",
-                proc_4_title: "Запуск", proc_4_desc: "Тестуємо під навантаженням, деплоїмо на сервер та здаємо проєкт.",
-                port_1_desc: "Повноцінний магазин у Telegram. Кошик, онлайн-оплата, автоматична генерація чеків та адмінка.",
-                port_2_desc: "Аналітична панель із графіками реального часу, інтеграцією WebSockets та красивим Glass-дизайном.",
-                port_3_desc: "Сайт-візитка для дизайн-студії з неймовірно плавними анімаціями та ефектом паралаксу.",
-                port_4_desc: "Багатокористувацька CRM-система для управління завданнями та фінансами компанії. Складний бекенд.",
-                port_5_desc: "Мобільний веб-додаток для замовлення їжі. Працює офлайн, надсилає Push-сповіщення.",
-                port_6_desc: "Інтелектуальний бот-помічник на базі ChatGPT, навчений на базі знань конкретної компанії.",
-                rev_1_role: "CEO E-commerce", rev_1_text: '"Євген — справжній профі. Написав для нас Telegram-бота магазину за тиждень. Все працює як швейцарський годинник, адмінка супер зручна. Рекомендую!"',
-                rev_2_role: "Арт-директор", rev_2_text: '"Замовляли сайт-візитку. Хотіли щось нестандартне, з вау-ефектом. Результат перевершив очікування, анімації космос, клієнти в захваті."',
-                rev_3_role: "Founder Crypto Startup", rev_3_text: '"Потрібен був складний дашборд для парсингу даних. Євген не тільки зробив відмінний Frontend на Vue, але й грамотно вибудував архітектуру бекенда."',
-                contact_desc: "Готові перетворити ідею на потужний цифровий продукт? Напишіть мені прямо зараз.", contact_tg: "Telegram Channel / PM"
+            2: {
+                images: [
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
+                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                tags: ["Vue.js", "TailwindCSS", "WebSockets", "Node.js"],
+                ru: { title: "Crypto Analytics Dashboard", desc: "<p>Аналитическая платформа для трейдеров. Собирает данные с бирж по API и выводит их в красивом интерфейсе.</p><br><p>Реализовано обновление цен в реальном времени через WebSockets. Дизайн выполнен в темных тонах с использованием премиального эффекта Glassmorphism, чтобы снизить нагрузку на глаза при долгой работе.</p>" },
+                uk: { title: "Crypto Analytics Dashboard", desc: "<p>Аналітична платформа для трейдерів. Збирає дані з бірж по API.</p><br><p>Реалізовано оновлення цін у реальному часі через WebSockets. Преміальний Glassmorphism дизайн.</p>" },
+                en: { title: "Crypto Analytics Dashboard", desc: "<p>Analytics platform for traders. Fetches exchange data via API.</p><br><p>Real-time price updates via WebSockets. Premium Glassmorphism dark design.</p>" }
             },
-            en: {
-                nav_home: "Home", nav_about: "About Me", nav_process: "Process", nav_portfolio: "Portfolio", nav_reviews: "Reviews", nav_contact: "Contact",
-                hero_hi: "Hi, I'm", hero_name: "Evgeny", hero_desc: "Digital solutions architect. I build premium portfolio websites, complex Telegram bots, and scalable web applications.",
-                btn_projects: "View Work", btn_hire: "Hire Me",
-                about_p1: "I'm Evgeny, a professional Full-Stack developer. My mission is to transform your ideas into elegant code and a working business tool.",
-                about_p2: "I specialize in creating responsive websites with Glassmorphism effects, high-load Telegram bots, and designing reliable server architectures.",
-                stat_exp: "Years Exp", stat_proj: "Projects",
-                proc_sub: "Transparency and quality at every stage",
-                proc_1_title: "Analytics", proc_1_desc: "We study the task, create a detailed spec, and fix the timeline.",
-                proc_2_title: "Design", proc_2_desc: "We design the logic and draw a modern UI/UX interface.",
-                proc_3_title: "Development", proc_3_desc: "We write clean code, configure databases, and APIs.",
-                proc_4_title: "Launch", proc_4_desc: "Load testing, server deployment, and project delivery.",
-                port_1_desc: "Full-featured store inside Telegram. Cart, online payments, auto-receipts, and an admin panel.",
-                port_2_desc: "Analytics dashboard with real-time charts, WebSockets integration, and beautiful Glass design.",
-                port_3_desc: "Portfolio website for a design studio with incredibly smooth animations and parallax effects.",
-                port_4_desc: "Multi-user CRM system for managing company tasks and finances. Complex backend architecture.",
-                port_5_desc: "Mobile web app for food delivery. Works offline and sends Push notifications.",
-                port_6_desc: "Intelligent AI assistant bot powered by ChatGPT, trained on the company's specific knowledge base.",
-                rev_1_role: "CEO E-commerce", rev_1_text: '"Evgeny is a true pro. Built our store Telegram bot in a week. Everything works like a Swiss watch, admin panel is super handy. Highly recommended!"',
-                rev_2_role: "Art Director", rev_2_text: '"Ordered a portfolio site. Wanted something unique with a wow effect. The result exceeded expectations, animations are cosmic, clients love it."',
-                rev_3_role: "Founder Crypto Startup", rev_3_text: '"Needed a complex dashboard for data parsing. Evgeny not only made a great Vue Frontend but also properly structured the backend architecture."',
-                contact_desc: "Ready to turn your idea into a powerful digital product? Drop me a message right now.", contact_tg: "Telegram Channel / PM"
+            3: {
+                images: [
+                    "https://images.unsplash.com/photo-1522542550221-31fd19575a2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80"
+                ],
+                tags: ["HTML/CSS", "JavaScript", "GSAP Animations"],
+                ru: { title: "Premium Design Studio", desc: "<p>Имиджевый многостраничный сайт для студии интерьерного дизайна.</p><br><p>Основной упор сделан на визуальную составляющую: плавный скроллинг, параллакс-эффекты для изображений и анимированные переходы между страницами без перезагрузки браузера (SPA).</p>" },
+                uk: { title: "Premium Design Studio", desc: "<p>Іміджевий багатосторінковий сайт для студії дизайну інтер'єру.</p><br><p>Основний акцент на візуальну складову: плавний скролінг, паралакс-ефекти та анімовані переходи (SPA).</p>" },
+                en: { title: "Premium Design Studio", desc: "<p>Image multipage website for an interior design studio.</p><br><p>Focus is on visuals: smooth scrolling, parallax effects, and animated page transitions (SPA).</p>" }
             }
         };
 
-        let currentLang = 'ru';
+        const projectModal = document.getElementById('project-modal');
+
+        function openProject(id) {
+            const data = projectsData[id];
+            if(!data) return;
+
+            const gallery = document.getElementById('modal-gallery');
+            gallery.innerHTML = data.images.map(img => `
+                <div class="rounded-2xl overflow-hidden h-48 md:h-64 border border-white/10 relative">
+                    <img src="${img}" alt="Project Photo" class="w-full h-full object-cover">
+                </div>
+            `).join('');
+
+            document.getElementById('modal-tags').innerHTML = data.tags.map(tag => `
+                <span class="px-3 py-1 text-xs font-bold rounded-lg bg-indigo-500/20 text-indigo-300 border border-indigo-500/20">${tag}</span>
+            `).join('');
+
+            projectModal.dataset.currentId = id;
+            updateModalText(currentLang);
+
+            projectModal.classList.remove('hidden-modal');
+            projectModal.classList.add('active-modal');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProject() {
+            projectModal.classList.remove('active-modal');
+            projectModal.classList.add('hidden-modal');
+            document.body.style.overflow = '';
+        }
+
+        function updateModalText(lang) {
+            const id = projectModal.dataset.currentId;
+            if(!id || !projectsData[id]) return;
+            document.getElementById('modal-title').innerHTML = projectsData[id][lang].title;
+            document.getElementById('modal-desc').innerHTML = projectsData[id][lang].desc;
+        }
+
+        // --- ЛОКАЛИЗАЦИЯ ---
+        const translations = {
+            ru: {
+                nav_home: "Главная", nav_portfolio: "Портфолио", nav_contact: "Контакты",
+                hero_hi: "Привет, я", hero_name: "Евгений", hero_desc: "Архитектор цифровых решений. Разрабатываю премиальные сайты, Telegram-боты и веб-приложения.",
+                btn_projects: "Смотреть работы", btn_hire: "Заказать разработку",
+                port_1_desc: "Полноценный магазин внутри Telegram. Корзина, онлайн-оплата и админка.",
+                port_2_desc: "Аналитическая панель с графиками реального времени.",
+                port_3_desc: "Сайт-визитка для дизайн-студии с Glassmorphism.",
+                btn_more: "Подробнее →", contact_desc: "Готовы превратить идею в мощный продукт?"
+            },
+            uk: {
+                nav_home: "Головна", nav_portfolio: "Портфоліо", nav_contact: "Контакти",
+                hero_hi: "Привіт, я", hero_name: "Євгеній", hero_desc: "Архітектор цифрових рішень. Розробляю преміальні сайти, Telegram-боти та веб-додатки.",
+                btn_projects: "Дивитися роботи", btn_hire: "Замовити розробку",
+                port_1_desc: "Повноцінний магазин у Telegram. Кошик, онлайн-оплата та адмінка.",
+                port_2_desc: "Аналітична панель із графіками реального часу.",
+                port_3_desc: "Сайт-візитка для дизайн-студії з Glassmorphism.",
+                btn_more: "Детальніше →", contact_desc: "Готові перетворити ідею на потужний продукт?"
+            },
+            en: {
+                nav_home: "Home", nav_portfolio: "Portfolio", nav_contact: "Contact",
+                hero_hi: "Hi, I'm", hero_name: "Evgeny", hero_desc: "Digital solutions architect. I build premium websites, Telegram bots, and web applications.",
+                btn_projects: "View Work", btn_hire: "Hire Me",
+                port_1_desc: "Full-featured store inside Telegram. Cart, online payments and admin panel.",
+                port_2_desc: "Analytics dashboard with real-time charts.",
+                port_3_desc: "Portfolio website for a design studio with Glassmorphism.",
+                btn_more: "Read More →", contact_desc: "Ready to turn your idea into a powerful product?"
+            }
+        };
+
+        // ИЗМЕНЕНИЕ ЯЗЫКА ПО УМОЛЧАНИЮ НА УКРАИНСКИЙ
+        let currentLang = 'uk';
 
         function applyTranslations(lang) {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    el.innerHTML = translations[lang][key];
-                }
+                if (translations[lang] && translations[lang][key]) el.innerHTML = translations[lang][key];
             });
+            updateModalText(lang);
         }
 
         function setLang(lang) {
             currentLang = lang;
             applyTranslations(lang);
-            
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active', 'bg-white/20', 'text-white', 'shadow-sm');
                 btn.classList.add('text-gray-400');
@@ -571,6 +450,11 @@
                 }
             });
         }
+        
+        // Принудительно вызываем функцию при загрузке, чтобы установить UI под украинский
+        window.addEventListener('DOMContentLoaded', () => {
+             setLang('uk');
+        });
     </script>
 </body>
 </html>
